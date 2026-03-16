@@ -20,6 +20,7 @@ jobs:
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
         run: |
           newman run Trello_workflow.postman_collection.json \
+            -r "cli,json,junit,htmlextra" \
             --global-var "Key=$TRELLO_KEY" \
             --global-var "Token=$TRELLO_TOKEN" \
             --global-var "Boardname=abc133"
