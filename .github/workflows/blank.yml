@@ -11,8 +11,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Newman
-        run: npm install -g newman
+      - name: Install Newman and Reporters
+        run: npm install -g newman newman-reporter-htmlextra
 
       - name: Run Newman Tests
         env:
@@ -20,7 +20,15 @@ jobs:
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
         run: |
           newman run Trello_workflow.postman_collection.json \
-            -r "cli,json,junit,htmlextra" \
+            -r cli,json,junit,htmlextra \
             --global-var "Key=$TRELLO_KEY" \
             --global-var "Token=$TRELLO_TOKEN" \
             --global-var "Boardname=abc133"
+
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trello-api-reports
+          path: |
+            newman/
